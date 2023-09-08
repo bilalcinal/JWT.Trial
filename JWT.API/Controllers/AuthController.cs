@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace JWT.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class AuthController : ControllerBase
     {
         string signinKey = "BuBenimSigningKey";
@@ -20,7 +20,8 @@ namespace JWT.API.Controllers
         [HttpGet]
         public string Get(string userName, string Password)
         {
-
+         try
+         {
             var Claims = new[]{
                 new Claim(ClaimTypes.Name, userName),
                 new Claim(JwtRegisteredClaimNames.Email, userName)
@@ -30,7 +31,7 @@ namespace JWT.API.Controllers
             var credentials = new SigningCredentials(securitykey, SecurityAlgorithms.HmacSha256);
 
             var jwtSecurityToken = new JwtSecurityToken(
-                issuer: "https://www.fatihbaytar.com",
+                issuer: "https://www.bilalcinal.com",
                 audience:"BuBenimKullandığımTestDeğeri",
                 claims: Claims,
                 expires: DateTime.Now.AddDays(15),
@@ -40,10 +41,17 @@ namespace JWT.API.Controllers
  
            var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
            return token;
+         }
+         catch (System.Exception)
+         {
+            
+            throw;
+         }
+            
         }
 
         
-        [HttpGet("ValidateToken")]
+        [HttpGet]
         public bool ValidateToken(string token)
         {
             var securtiyKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signinKey));
